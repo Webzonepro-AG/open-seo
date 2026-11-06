@@ -51,6 +51,7 @@ export const saveKeywords = createServerFn({ method: "POST" })
       ...data,
       ...resolveMarket(data, context.project),
       projectId: context.projectId,
+      organizationId: context.organizationId,
     });
   });
 
@@ -116,9 +117,9 @@ export const removeSavedKeywords = createServerFn({
 export const refreshSavedKeywordMetrics = createServerFn({ method: "POST" })
   .middleware(requireProjectContext)
   .validator(refreshSavedKeywordMetricsSchema)
-  .handler(async ({ context }) => {
+  .handler(async ({ data, context }) => {
     return KeywordResearchService.refreshSavedKeywordMetrics(
-      { projectId: context.projectId },
+      { projectId: context.projectId, savedKeywordIds: data.savedKeywordIds },
       context,
     );
   });
